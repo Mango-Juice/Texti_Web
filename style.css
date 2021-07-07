@@ -1,0 +1,28 @@
+.whole{
+    margin-left: 8%;
+    float: left;
+}
+
+.title {
+    font-size: 80px;
+    margin-top: 5%;
+    font-weight: bold;
+}
+
+.title2 {
+    font-size: 28px;
+    margin-top: 12%;
+}
+
+.start_button{
+    font-size: 30px;
+    background-color : black;
+    color: white;
+    border-radius: 20px 20px 20px 20px;
+    padding: 2% 3% 2% 3%;
+    text-decoration: none;
+    transition: all ease 0.2s;
+}
+.start_button:hover {
+    transform: scale( 1.05 );
+}
