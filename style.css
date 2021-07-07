@@ -5,6 +5,10 @@ body {
   font-family: "Noto Sans KR", sans-serif !important;
 }
 
+textarea  { 
+   font-family: "Noto Sans KR", sans-serif !important;
+}
+
 .whole{
     margin-left: 8%;
     float: left;
