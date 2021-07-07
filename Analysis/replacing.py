@@ -1,7 +1,8 @@
 from konlpy.tag import Kkma
 kma = Kkma()
 
-def RemoveDoublePassive(input_text):
+
+def remove_double_passive(input_text):
     # 이중피동 제거 함수
     replacing = ["이", "히", "리", "기"]
     words = input_text.split(" ")
@@ -10,14 +11,14 @@ def RemoveDoublePassive(input_text):
     for word_idx, word in enumerate(words):
         changed_word = ""
         is_changed = False
-        passCount = 0
+        pass_count = 0
         tagged_morphs = kma.pos(word)
 
         for morph_idx, morph in enumerate(tagged_morphs):
             flag = True
 
-            if passCount > 0:
-                passCount -= 1
+            if pass_count > 0:
+                pass_count -= 1
                 continue
 
             if flag and morph[1] == "VV":
@@ -27,7 +28,7 @@ def RemoveDoublePassive(input_text):
                         for idx in range(len(target)-2):
                             if replaced == target[idx:idx+3]:
                                 changed_word += target[:idx] + replacing[rep_idx]
-                                passCount = 2
+                                pass_count = 2
                                 is_changed = True
                                 flag = False
                 else:
