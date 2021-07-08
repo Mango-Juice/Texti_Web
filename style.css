@@ -36,7 +36,7 @@ textarea  {
     transition: all ease 0.2s;
 }
 .start_button:hover {
-    transform: scale( 1.1 );
+    color: #32F1FF;
 }
 
 .bd-placeholder-img {
