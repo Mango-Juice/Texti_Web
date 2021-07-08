@@ -33,7 +33,7 @@ textarea  {
     padding: 3% 5% 3% 5%;
     text-decoration: none;
     cursor: pointer;
-    transition: all ease 0.4s;
+    transition: all ease 0.3s;
 }
 .start_button:hover {
     color: #FFC107;
