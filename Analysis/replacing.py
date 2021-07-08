@@ -67,9 +67,6 @@ def remove_double_plural(input_text):
     return result
 
 
-print(remove_double_plural("나는 여러 선풍기들과 함께 갔다."))
-
-
 def remove_double_passive(input_text):
     # 이중피동 제거 함수
     replacing = ["이", "히", "리", "기"]
