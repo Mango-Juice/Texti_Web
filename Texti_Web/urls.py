@@ -1,3 +1,4 @@
+
 """Texti_Web URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -14,10 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from .views import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
+    path('start/',include('start.urls'), name='start'),
+    path('step1/',include('step1.urls'), name='step1'),
+    path('step2/',include('step2.urls'), name='step2'),
+    path('step3/',include('step3.urls'), name='step3'),
 ]

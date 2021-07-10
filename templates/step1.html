@@ -1,0 +1,183 @@
+<html>
+    
+	<head>
+        <title>Texti</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Mango-Juice/Texti_Web@d7f92c1/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="shortcut icon" href=""> 
+    </head>
+    
+    <body>
+        <header class="p-3 bg-dark text-white" style="height: 10%;">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="../" class="nav-link px-2 text-secondary"><img src = "https://github.com/Mango-Juice/Texti_Web/blob/main/TEXTI_Icon_Sample_3.png?raw=true" style = "width: 100; height: auto"></a></li>
+              <li><a href='javascript:void(0);' onclick="not_ready();" class="nav-link px-2 text-white">Pricing</a></li>
+              <li><a href='javascript:void(0);' onclick="not_ready();" class="nav-link px-2 text-white">About</a></li>
+            </ul>
+
+            <div class="text-end">
+              <button type="button" class="btn btn-outline-light me-2" style = "transition: all ease 0.3s;">Login</button>
+              <button type="button" class="btn btn-warning">Sign-up</button>
+            </div>
+          </div>
+        </div>
+      </header>
+        
+        <div style = "text-align: left">
+            <div class = "title" style = "margin-bottom: 1%; margin-top: 1%; font-size: 30px; margin-left: 2.5%">
+                Step1
+            </div>
+        </div>
+            
+        <div style = "text align: center">
+            <form action= "{% url 'step2' %}" method="post">
+                <table border="0" style="width: 100%; height: 75%; table-layout:fixed;  display: fixed;">
+                    <tr>
+                    <th style = "height: 100%; text-align: center;"><div name="original_text" id="original_text" placeholder = "이곳에 내용을 입력하세요." style = "width: 90%; height: 100%; font-size: 18px; border: 2px solid black; padding: 10px; resize: none; text-align: left; font-weight: normal; overflow-y:scroll; white-space: pre-wrap; margin-left: 5%"></div><textarea name="hidden" id="hidden" style = "display: none; white-space: pre-wrap;"></textarea></th>
+                    <th style = "height: 100%; text-align: center; ">
+                        <div style = "width: 90%; height: 100%; overflow-y:scroll; font-size: 20px; padding: 10px 20px 10px 20px; border: 2px solid black; text-align: left; cursor: context-menu; font-weight: normal; margin-left: 5%;" id = "edited_text"><div style = 'margin-bottom: 1%; color: black; font-weight: bold;'> ✅ 문제가 발견되지 않았습니다!</div></div>
+                    </th>
+                    </tr>
+                    <tr style = "height: 20%">
+                        <td style = "text-align: center; padding-top: 20px;"><img src = "https://github.com/Mango-Juice/Texti_Web/blob/main/3circle_1step.png?raw=true" style = "width: 15%; height: auto"></td>
+                        <td style = "text-align: center; padding-top: 20px;"><button type = "submit" class = "start_button" style = "width: 24%; height: auto; padding: 0.5%; font-size: 20px;">다음 단계</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        
+        {% autoescape off %}
+        <script type="text/javascript">
+            var answer = {{ error }};
+            if(answer == 1){
+                alert("분석에 실패하였습니다.");
+                history.back();
+                }
+            else {
+                // 초기 전역변수  
+                var answer = {{ edited_text }};
+                var original_text = document.getElementById('original_text');
+                var edited_text = document.getElementById('edited_text');
+                var hidden = document.getElementById('hidden');
+                original_text.innerHTML = answer['html'];
+                hidden.innerHTML = original_text.innerHTML.replace(/(<|<\/)SPAN(.*?)>/gi, '')
+            
+                if(answer['rev_plural']['words'].length > 0 || answer['rev_passive']['words'].length > 0 || answer['rev_repeated']['words'].length > 0) edited_text.innerHTML = ''
+
+                for(let i = 1; i <= answer['rev_plural']['words'].length; i++)
+                    edited_text.innerHTML += "<div id = 'right_plural" + i + "' style = 'margin-bottom: 1%; color: black;' title = '클릭하여 모두 수정하기'> ❌ <U>[이중 복수 표현 경고]</U> : '" + answer['rev_plural']['words'][i - 1] + "'은(는) 이중 복수 표현입니다.</div>";
+                for(let i = 1; i <= answer['rev_passive']['words'].length; i++)
+                    edited_text.innerHTML += "<div id = 'right_passive" + i + "' style = 'margin-bottom: 1%; color: #black;' title = '클릭하여 모두 수정하기'> ❌ <U>[이중 피동 표현 경고]</U> : '" + answer['rev_passive']['words'][i - 1] + "'은(는) 이중 피동 표현입니다.</div>";
+                for(let i = 1; i <= answer['rev_repeated']['words'].length; i++)
+                    edited_text.innerHTML += "<div id = 'right_repeated" + i + "' style = 'margin-bottom: 1%; color: #black;'> 😣 <U>[중복 어휘 주의]</U> : '" + answer['rev_repeated']['words'][i - 1] + "'이(가) 과도하게 사용되었습니다.</div>";
+
+                // 중복 어휘
+                for(let t = 1; t <= answer['rev_repeated']['words'].length; t++){
+                    (function(i){
+                        let changers = document.getElementsByName('repeated' + i);
+                        let target = document.getElementById('right_repeated' + i);
+
+                        target.addEventListener('mouseover', function(){
+                            target.style.color = "orange";
+                            target.style.fontWeight = "bold";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "orange";
+                                changers[j].style.fontWeight = "bold";
+                            }
+                        }, false);
+                        target.addEventListener('mouseout', function(){
+                            target.style.color = "black";
+                            target.style.fontWeight = "normal";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "black";
+                                changers[j].style.fontWeight = "normal";
+                            }
+                        }, false);
+                        /*target.addEventListener('click', function(){
+                            target.style.display = "none";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].innerText = answer['rev_repeated']['edit'][j]
+                            }
+                        }, false);*/
+                    }(t));
+                }
+
+                // 이중 복수
+                for(let t = 1; t <= answer['rev_plural']['words'].length; t++){
+                    (function(i){
+                        let changers = document.getElementsByName('plural' + i);
+                        let target = document.getElementById('right_plural' + i);
+
+                        target.addEventListener('mouseover', function(){
+                            target.style.color = "red";
+                            target.style.fontWeight = "bold";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "red";
+                                changers[j].style.fontWeight = "bold";
+                            }
+                        }, false);
+                        target.addEventListener('mouseout', function(){
+                            target.style.color = "black";
+                            target.style.fontWeight = "normal";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "black";
+                                changers[j].style.fontWeight = "normal";
+                            }
+                        }, false);
+                        target.addEventListener('click', function(){
+                            target.style.display = "none";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].innerText = answer['rev_plural']['edit'][j]
+                            hidden.innerHTML = original_text.innerHTML.replace(/(<|<\/)SPAN(.*?)>/gi, '')
+                            }
+                        }, false);
+                    }(t));
+                }
+
+                // 이중 피동
+                for(let t = 1; t <= answer['rev_passive']['words'].length; t++){
+                    (function(i){
+                        let changers = document.getElementsByName('passive' + i);
+                        let target = document.getElementById('right_passive' + i);
+
+                        target.addEventListener('mouseover', function(){
+                            target.style.color = "red";
+                            target.style.fontWeight = "bold";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "red";
+                                changers[j].style.fontWeight = "bold";
+                            }
+                        }, false);
+                        target.addEventListener('mouseout', function(){
+                            target.style.color = "black";
+                            target.style.fontWeight = "normal";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].style.color = "black";
+                                changers[j].style.fontWeight = "normal";
+                            }
+                        }, false);
+                        target.addEventListener('click', function(){
+                            target.style.display = "none";
+                            for(let j = 0; j < changers.length; j++){
+                                changers[j].innerText = answer['rev_passive']['edit'][j]
+                            hidden.innerHTML = original_text.innerHTML.replace(/(<|<\/)SPAN(.*?)>/gi, '')
+                            }
+                        }, false);
+                    }(t));
+                }
+            }
+
+        </script>
+        {% endautoescape %}
+    </body>
+    
+    <footer>
+        
+    </footer>
+</html>
